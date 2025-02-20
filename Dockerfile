@@ -1,6 +1,9 @@
 # Koristi PHP sa FPM
 FROM php:8.1-fpm
 
+# Resetovanje APT cache-a da bi se izbegle greške
+RUN rm -rf /var/lib/apt/lists/*
+
 # Instalacija sistemskih paketa
 RUN apt-get update && apt-get install -y \
     libpng-dev \
