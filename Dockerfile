@@ -1,7 +1,8 @@
+# Koristimo zvanični PHP image
 FROM php:8.1-fpm
 
-# Instalacija sistemskih paketa i PHP ekstenzija
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Instalacija sistemskih paketa
+RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
@@ -11,31 +12,33 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl-dev \
     libcurl4-openssl-dev \
     libicu-dev \
-    unzip \
+    libonig-dev \  # OVO JE DODATO - rešava problem sa oniguruma
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql opcache intl mbstring xml curl \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install gd pdo pdo_mysql soap opcache intl mbstring xml curl
 
 # Instalacija Composer-a
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Radni direktorijum aplikacije
+# Kreiranje radnog direktorijuma
 WORKDIR /var/www
 
-# Kopiranje Laravel fajlova
+# Kopiranje Laravel koda
 COPY . .
 
-# Instalacija PHP paketa
+# Osiguravanje da .env fajl postoji
+RUN cp .env.example .env
+
+# Instalacija PHP zavisnosti
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Podešavanje permisija
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www
 
-# Podešavanje Nginx servera
-COPY nginx/laravel.conf /etc/nginx/sites-available/default
+# Kopiranje Nginx konfiguracije
+COPY ./nginx/laravel.conf /etc/nginx/sites-available/default
 
-# Expose porta
+# Otvaranje porta
 EXPOSE 80
 
-# Start Nginx i PHP-FPM
-CMD service php8.1-fpm start && nginx -g "daemon off;"
+# Pokretanje servisa
+CMD service nginx start && php-fpm
