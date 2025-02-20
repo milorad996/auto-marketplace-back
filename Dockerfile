@@ -1,14 +1,12 @@
-# Odaberi PHP verziju sa FPM (FastCGI Process Manager) za Laravel
 FROM php:8.1-fpm
 
-# Instaliraj potrebne pakete i ekstenzije
-RUN apt-get update && apt-get install -y \
+# Instaliraj osnovne zavisnosti i pakete
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
     zip \
     git \
-    nginx \
     libxml2-dev \
     libssl-dev \
     libcurl4-openssl-dev \
@@ -17,8 +15,7 @@ RUN apt-get update && apt-get install -y \
     php-xml \
     php-curl \
     php-mysql \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql soap opcache intl mbstring xml curl
+    && apt-get clean
 
 # Instalacija Composer-a
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
