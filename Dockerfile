@@ -12,9 +12,9 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libcurl4-openssl-dev \
     libicu-dev \
-    libonig-dev \  # OVO JE DODATO - rešava problem sa oniguruma
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql soap opcache intl mbstring xml curl
+    libonig-dev && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    docker-php-ext-install gd pdo pdo_mysql soap opcache intl mbstring xml curl
 
 # Instalacija Composer-a
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
