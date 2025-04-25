@@ -49,7 +49,6 @@ class CarController extends Controller
     {
 
 
-        DB::beginTransaction();
 
         try {
             $carModel = CarModel::firstOrCreate(
@@ -191,17 +190,7 @@ class CarController extends Controller
 
 
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Car $car)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Car $car)
     {
         if (auth()->user()->id !== $car->user_id) {

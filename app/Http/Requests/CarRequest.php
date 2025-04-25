@@ -29,7 +29,7 @@ class CarRequest extends FormRequest
             'fuel_type' => 'required|string|max:255',
             'door_count' => 'required|integer|min:1|max:10',
             'description' => 'nullable|string|max:1000',
-            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+            // 'images.*' => 'nullable|mimes:jpg,jpeg,png,webp|max:5120|url',
         ];
     }
 
