@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -81,8 +82,9 @@ class AuthController extends Controller
         }
 
         try {
-            Auth::setToken($refreshToken);
-            $newToken = Auth::refresh();
+            JWTAuth::setToken($refreshToken);
+            $newToken = JWTAuth::refresh($refreshToken);
+
 
             return response()->json([
                 'user' => Auth::user(),
